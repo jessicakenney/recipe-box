@@ -9,13 +9,13 @@ public interface VegetableDao {
 
   //Create
   void add(Vegetable vegetable);
-  //void addVegetableToRecipeCard(Vegetable vegetable, RecipeCard recipeCard);
+  //join
+  void addVegetableToRecipeCard(Vegetable vegetable, RecipeCard recipeCard);
 
   //Read
   List<Vegetable> getAll();
   Vegetable findById(int id);
-  //List<RecipeCard> getAllRecipeCardsForVegetables();
-  //List<RecipeCard> getAllRecipeCardsForASpecificVegetable(int id)
+  List<RecipeCard> getAllRecipeCardsForAVegetable(int id);
 
   //update
   //omit for now

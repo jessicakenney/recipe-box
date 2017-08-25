@@ -8,4 +8,8 @@ CREATE TABLE IF NOT EXISTS recipecards (
  notes VARCHAR,
  rating INT
 );
+CREATE TABLE IF NOT EXISTS vegetables (
+ id int PRIMARY KEY auto_increment,
+ name VARCHAR
+);
 

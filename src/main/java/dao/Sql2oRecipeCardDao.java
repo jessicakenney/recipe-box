@@ -47,6 +47,38 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
                .executeAndFetchFirst(RecipeCard.class);
      }
    }
+  @Override
+  public void update(int id, String name, String url,String image, String notes, int rating) {
+    String sql = "UPDATE recipecards SET (name,url,image,notes,rating)=(:name,:url,:image,:notes,:rating) WHERE id=:id";
+    try (Connection con = sql2o.open()) {
+      con.createQuery(sql)
+              .addParameter("id", id)
+              .addParameter("name", name)
+              .addParameter("url", url)
+              .addParameter("image", image)
+              .addParameter("notes", notes)
+              .addParameter("rating", rating)
+              .executeUpdate();
+    } catch (Sql2oException ex) {
+      System.out.println(ex);
+    }
+  }
+
+  @Override
+  public void deleteById(int id) {
+    String sql = "DELETE from recipecards WHERE id=:id";
+    String deleteJoin = "DELETE from recipecards_vegetables WHERE recipeCardid = :recipeCardId";
+    try (Connection con = sql2o.open()) {
+      con.createQuery(sql)
+              .addParameter("id", id)
+              .executeUpdate();
+      con.createQuery(deleteJoin)
+              .addParameter("recipeCardId",id)
+              .executeUpdate();
+    } catch (Sql2oException ex) {
+      System.out.println(ex);
+    }
+  }
 
   @Override
   public List<Vegetable> getAllVegetablesForARecipeCard(int recipeCardId) {

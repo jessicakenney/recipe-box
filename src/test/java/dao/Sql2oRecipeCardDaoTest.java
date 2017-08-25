@@ -74,4 +74,27 @@ public class Sql2oRecipeCardDaoTest {
     int number = recipeCardDao.getAll().size();
     assertEquals(0, number);
   }
+
+  @Test
+  public void update_correctlyUpdates() {
+    RecipeCard recipeCard = getTestRecipeCard();
+    recipeCardDao.add(recipeCard);
+    int id = recipeCard.getId();
+    recipeCardDao.update(id, "newName", "newUrl", "newImage", "newNotes", 2);
+    RecipeCard updatedRecipeCard = recipeCardDao.findById(id);
+    assertEquals("newName", updatedRecipeCard.getName());
+    assertEquals("newUrl", updatedRecipeCard.getUrl());
+    assertEquals("newImage", updatedRecipeCard.getImage());
+    assertEquals("newNotes", updatedRecipeCard.getNotes());
+    assertEquals(2, updatedRecipeCard.getRating());
+  }
+
+  @Test
+  public void deleteById_deletesVeryWell() {
+    RecipeCard recipeCard = getTestRecipeCard();
+    recipeCardDao.add(recipeCard);
+    recipeCardDao.deleteById(recipeCard.getId());
+    assertEquals(0,recipeCardDao.getAll().size());
+  }
+
 }

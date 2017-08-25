@@ -92,6 +92,7 @@ import static org.junit.Assert.*;
       assertEquals(0, number);
     }
 
+    //includes both getAllRecipeCardsForAVegetable and getAllVegetablesForARecipeCard
     @Test
     public void addVegetableToRecipeCard_getAllRecipeCardsForAVegetable() throws Exception {
       Vegetable vegetable = getTestVegetable();
@@ -115,8 +116,6 @@ import static org.junit.Assert.*;
       List<RecipeCard>test3Recipes= vegetableDao.getAllRecipeCardsForAVegetable(tomato.getId());
       assertEquals( 2, test3Recipes.size());
       List<Vegetable> testVegetables = recipeCardDao.getAllVegetablesForARecipeCard(recipeCard.getId());
-      System.out.println(testVegetables.get(0).getName());
-      System.out.println(testVegetables.get(1).getName());
       Vegetable[] vegesExpected = { vegetable, tomato };
       assertEquals ( Arrays.asList(vegesExpected), testVegetables);
     }

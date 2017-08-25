@@ -93,8 +93,6 @@ public class App {
       return gson.toJson(vegetables);
     });
 
-
-
     //Filter
     after((req,res)->{
       res.type("application/json");

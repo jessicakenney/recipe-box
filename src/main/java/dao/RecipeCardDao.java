@@ -16,8 +16,8 @@ public interface RecipeCardDao {
     List<Vegetable> getAllVegetablesForARecipeCard(int id);
 
     //Update
-    //void update(int id, Type1 var1, Type2 var2);
+    void update(int id, String name, String url, String image,String notes,int rating);
 
     //Delete
-    //void deleteById(int id);
+    void deleteById(int id);
  }

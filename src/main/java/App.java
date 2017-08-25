@@ -7,6 +7,8 @@ import models.Vegetable;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import java.util.List;
+
 import static spark.Spark.after;
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -52,13 +54,13 @@ public class App {
     });
 
     // Add Vegetable To RecipeCard -->Join
-    post("//:foodTypeId/restaurants/:restaurantId", "application/json", (req,res)-> {
-      Vegetable vegetable = gson.fromJson(req.body(), Vegetable.class);
-      vegetableDao.add(vegetable);
-      int restaurantId = Integer.parseInt(req.params("restaurantId"));
-      RecipeCard restaurant = recipeCardDao.findById(restaurantId);
-      vegetableDao.addVegetableToRecipeCard(vegetable,restaurant);
+    post("/recipecards/:recipeCardId/vegetables/:vegetableId/new", "application/json", (req,res)-> {
+      int vegetableId = Integer.parseInt(req.params("vegetableId"));
+      int recipeCardId = Integer.parseInt(req.params("recipeCardId"));
+      Vegetable vegetable = vegetableDao.findById(vegetableId);
+      vegetableDao.addVegetableToRecipeCard(vegetable,recipeCardDao.findById(recipeCardId));
       res.status(201);
+      //what to return for this post?
       return gson.toJson(vegetable);
     });
 
@@ -78,16 +80,18 @@ public class App {
     });
 
     // Get All Recipes for a specific Vegetable
-    get("/vegetables/:id/recipecards", "application/json", (req, res) -> {
+    get("/recipecards/vegetables/:id/index", "application/json", (req, res) -> {
       int vegetableId = Integer.parseInt(req.params("id"));
-      Vegetable vegetableToFind = vegetableDao.findById(vegetableId);
-      if (vegetableToFind == null) {
-        throw new ApiException(404, String.format("No vegetable with id: %d exists", vegetableId));
-      }
-
-      return gson.toJson(vegetableToFind);
+      List<RecipeCard> recipeCards = vegetableDao.getAllRecipeCardsForAVegetable(vegetableId);
+      return gson.toJson(recipeCards);
     });
 
+    // Get All Vegetables for a Recipe Card
+    get("/recipecards/:recipeCardId/vegetables", "application/json", (req, res) -> {
+      int recipeCardId = Integer.parseInt(req.params("recipeCardId"));
+      List<Vegetable> vegetables = recipeCardDao.getAllVegetablesForARecipeCard(recipeCardId);
+      return gson.toJson(vegetables);
+    });
 
 
 

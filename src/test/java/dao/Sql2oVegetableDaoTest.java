@@ -1,5 +1,6 @@
 package dao;
 
+import com.sun.org.apache.regexp.internal.RE;
 import models.RecipeCard;
 import models.Vegetable;
 import org.junit.After;
@@ -8,7 +9,9 @@ import org.junit.Test;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -97,11 +100,19 @@ import static org.junit.Assert.*;
       RecipeCard recipeCard2 = getTestRecipeCard2();
       vegetableDao.add(vegetable);
       vegetableDao.add(anotherVegetable);
+      Vegetable tomato = new Vegetable("tomato");
+      vegetableDao.add(tomato);
       recipeCardDao.add(recipeCard);
       recipeCardDao.add(recipeCard2);
       vegetableDao.addVegetableToRecipeCard(vegetable, recipeCard);
+      vegetableDao.addVegetableToRecipeCard(tomato, recipeCard);
       vegetableDao.addVegetableToRecipeCard(anotherVegetable, recipeCard2);
-      assertEquals( recipeCard, vegetableDao.getAllRecipeCardsForAVegetable(vegetable.getId()));
-      assertEquals( recipeCard2, vegetableDao.getAllRecipeCardsForAVegetable(anotherVegetable.getId()));
+      vegetableDao.addVegetableToRecipeCard(tomato, recipeCard2);
+      List<RecipeCard>testRecipes = vegetableDao.getAllRecipeCardsForAVegetable(vegetable.getId());
+      assertEquals( recipeCard, testRecipes.get(0));
+      List<RecipeCard>test2Recipes= vegetableDao.getAllRecipeCardsForAVegetable(anotherVegetable.getId());
+      assertEquals( recipeCard2, test2Recipes.get(0));
+      List<RecipeCard>test3Recipes= vegetableDao.getAllRecipeCardsForAVegetable(tomato.getId());
+      assertEquals( 2, test3Recipes.size());
     }
   }

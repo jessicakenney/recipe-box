@@ -1,9 +1,9 @@
 import com.google.gson.Gson;
 import dao.Sql2oRecipeCardDao;
-import dao.Sql2oVegetableDao;
+import dao.Sql2oTagDao;
 import models.ApiException;
 import models.RecipeCard;
-import models.Vegetable;
+import models.Tag;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
@@ -17,7 +17,7 @@ public class App {
 
   public static void main(String[] args) {
     Sql2oRecipeCardDao recipeCardDao;
-    Sql2oVegetableDao vegetableDao;
+    Sql2oTagDao vegetableDao;
     Connection conn;
     Gson gson = new Gson();
 
@@ -25,7 +25,7 @@ public class App {
 
     Sql2o sql2o = new Sql2o(connectionString, "", "");
     recipeCardDao = new Sql2oRecipeCardDao(sql2o);
-    vegetableDao = new Sql2oVegetableDao(sql2o);
+    vegetableDao = new Sql2oTagDao(sql2o);
     conn = sql2o.open();
 
     //-------------------Populate-----------------//
@@ -54,12 +54,12 @@ public class App {
     rating = 5;
     recipeCardDao.add(new RecipeCard(name, url, image, notes, rating));
 
-    vegetableDao.add(new Vegetable("kale"));
-    vegetableDao.add(new Vegetable("radicchio"));
-    vegetableDao.add(new Vegetable("carrots"));
-    vegetableDao.add(new Vegetable("potatoes"));
-    vegetableDao.add(new Vegetable("tomatoes"));
-    vegetableDao.add(new Vegetable("cauliflower"));
+    vegetableDao.add(new Tag("kale"));
+    vegetableDao.add(new Tag("radicchio"));
+    vegetableDao.add(new Tag("carrots"));
+    vegetableDao.add(new Tag("potatoes"));
+    vegetableDao.add(new Tag("tomatoes"));
+    vegetableDao.add(new Tag("cauliflower"));
 
 
     //----------RecipeCard API EndPoints----------//
@@ -70,8 +70,6 @@ public class App {
       recipeCardDao.deleteById(recipeCardId);
       return gson.toJson(recipeCardDao.findById(recipeCardId--));
     });
-
-
 
     // Enter new Recipe cards
     post("/recipecards/new", "application/json", (req, res) -> {
@@ -96,48 +94,46 @@ public class App {
       return gson.toJson(recipeCardToFind);
     });
 
-    // Add Vegetable To RecipeCard -->Join
-    get("/recipecards/:recipeCardId/vegetables/:vegetableId/new", "application/json", (req,res)-> {
+    // Add Tag To RecipeCard -->Join
+    post("/recipecards/:recipeCardId/vegetables/:vegetableId/new", "application/json", (req,res)-> {
       int vegetableId = Integer.parseInt(req.params("vegetableId"));
       int recipeCardId = Integer.parseInt(req.params("recipeCardId"));
-      Vegetable vegetable = vegetableDao.findById(vegetableId);
-      vegetableDao.addVegetableToRecipeCard(vegetable,recipeCardDao.findById(recipeCardId));
+      Tag vegetable = vegetableDao.findById(vegetableId);
+      vegetableDao.addTagToRecipeCard(vegetable,recipeCardDao.findById(recipeCardId));
       res.status(201);
-      //what to return for this post?
+      //what to return for this?
       return gson.toJson(vegetable);
     });
 
 
-
-
-    //----------Vegetable API EndPoints----------//
+    //----------Tag API EndPoints----------//
 
     post("/vegetables/new", "application/json", (req, res) -> {
-      Vegetable vegetable = gson.fromJson(req.body(), Vegetable.class);
+      Tag vegetable = gson.fromJson(req.body(), Tag.class);
       vegetableDao.add(vegetable);
       res.status(201);
       return gson.toJson(vegetable);
     });
 
-    // Get All Vegetable categories
+    // Get All Tag categories
     get("/vegetables", "application/json", (req, res) -> {
       return gson.toJson(vegetableDao.getAll());
     });
 
-    // Get All Recipes for a specific Vegetable
+    // Get All Recipes for a specific Tag
     get("/recipecards/vegetables/:id/index", "application/json", (req, res) -> {
       int vegetableId = Integer.parseInt(req.params("id"));
       if (vegetableDao.findById(vegetableId) == null) {
-        throw new ApiException(404, String.format("No Vegetable with id: %d exists", vegetableId));
+        throw new ApiException(404, String.format("No Tag with id: %d exists", vegetableId));
       }
-      List<RecipeCard> recipeCards = vegetableDao.getAllRecipeCardsForAVegetable(vegetableId);
+      List<RecipeCard> recipeCards = vegetableDao.getAllRecipeCardsForATag(vegetableId);
       return gson.toJson(recipeCards);
     });
 
-    // Get All Vegetables for a Recipe Card
+    // Get All Tags for a Recipe Card
     get("/recipecards/:recipeCardId/vegetables", "application/json", (req, res) -> {
       int recipeCardId = Integer.parseInt(req.params("recipeCardId"));
-      List<Vegetable> vegetables = recipeCardDao.getAllVegetablesForARecipeCard(recipeCardId);
+      List<Tag> vegetables = recipeCardDao.getAllTagsForARecipeCard(recipeCardId, "vegetables");
       return gson.toJson(vegetables);
     });
 

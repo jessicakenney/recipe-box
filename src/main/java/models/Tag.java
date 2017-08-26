@@ -1,11 +1,11 @@
 package models;
 
-public class Vegetable {
+public class Tag {
 
   private String name;
   private int id;
 
-  public Vegetable(String name) {
+  public Tag(String name) {
     this.name = name;
   }
 
@@ -30,10 +30,10 @@ public class Vegetable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Vegetable vegetable = (Vegetable) o;
+    Tag tag = (Tag) o;
 
-    if (id != vegetable.id) return false;
-    return name.equals(vegetable.name);
+    if (id != tag.id) return false;
+    return name.equals(tag.name);
   }
 
   @Override

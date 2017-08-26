@@ -2,7 +2,7 @@ package dao;
 
 import com.sun.org.apache.regexp.internal.RE;
 import models.RecipeCard;
-import models.Vegetable;
+import models.Tag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,20 +15,20 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-  public class Sql2oVegetableDaoTest {
+  public class Sql2oTagDaoTest {
 
-    private Sql2oVegetableDao vegetableDao;
+    private Sql2oTagDao vegetableDao;
     private RecipeCardDao recipeCardDao;
     private Connection conn;
 
-    public Vegetable getTestVegetable() {
+    public Tag getTestVegetable() {
       String name = "Corn";
-      return new Vegetable(name);
+      return new Tag(name);
     }
 
-    public Vegetable getTestVegetable2() {
+    public Tag getTestVegetable2() {
       String name = "Kale";
-      return new Vegetable(name);
+      return new Tag(name);
     }
 
     public RecipeCard getTestRecipeCard() {
@@ -51,7 +51,7 @@ import static org.junit.Assert.*;
     public void setUp() throws Exception {
       String connectionString = "jdbc:h2:mem:testing;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
       Sql2o sql2o = new Sql2o(connectionString, "", "");
-      vegetableDao = new Sql2oVegetableDao(sql2o);
+      vegetableDao = new Sql2oTagDao(sql2o);
       recipeCardDao = new Sql2oRecipeCardDao(sql2o);
       conn = sql2o.open();
     }
@@ -63,26 +63,26 @@ import static org.junit.Assert.*;
 
     @Test
     public void addingVegetableSetsId() throws Exception {
-      Vegetable vegetable = getTestVegetable();
+      Tag vegetable = getTestVegetable();
       vegetableDao.add(vegetable);
       assertEquals(1, vegetable.getId());
     }
 
     @Test
     public void existingVegetablesCanBeFoundById() throws Exception {
-      Vegetable vegetable = getTestVegetable();
+      Tag vegetable = getTestVegetable();
       vegetableDao.add(vegetable);
-      Vegetable foundVegetable = vegetableDao.findById(vegetable.getId());
+      Tag foundVegetable = vegetableDao.findById(vegetable.getId());
       assertEquals(vegetable, foundVegetable);
     }
 
     @Test
     public void getAll_allVegetablesAreFound() throws Exception {
-      Vegetable vegetable = getTestVegetable();
-      Vegetable anotherVegetable = getTestVegetable2();
+      Tag vegetable = getTestVegetable();
+      Tag anotherVegetable = getTestVegetable2();
       vegetableDao.add(vegetable);
       vegetableDao.add(anotherVegetable);
-      Vegetable[] testVegetables = {vegetable, anotherVegetable};
+      Tag[] testVegetables = {vegetable, anotherVegetable};
       assertEquals(Arrays.asList(testVegetables), vegetableDao.getAll());
     }
 
@@ -95,28 +95,28 @@ import static org.junit.Assert.*;
     //includes both getAllRecipeCardsForAVegetable and getAllVegetablesForARecipeCard
     @Test
     public void addVegetableToRecipeCard_getAllRecipeCardsForAVegetable() throws Exception {
-      Vegetable vegetable = getTestVegetable();
-      Vegetable anotherVegetable = getTestVegetable2();
+      Tag vegetable = getTestVegetable();
+      Tag anotherVegetable = getTestVegetable2();
       RecipeCard recipeCard = getTestRecipeCard();
       RecipeCard recipeCard2 = getTestRecipeCard2();
       vegetableDao.add(vegetable);
       vegetableDao.add(anotherVegetable);
-      Vegetable tomato = new Vegetable("tomato");
+      Tag tomato = new Tag("tomato");
       vegetableDao.add(tomato);
       recipeCardDao.add(recipeCard);
       recipeCardDao.add(recipeCard2);
-      vegetableDao.addVegetableToRecipeCard(vegetable, recipeCard);
-      vegetableDao.addVegetableToRecipeCard(tomato, recipeCard);
-      vegetableDao.addVegetableToRecipeCard(anotherVegetable, recipeCard2);
-      vegetableDao.addVegetableToRecipeCard(tomato, recipeCard2);
-      List<RecipeCard>testRecipes = vegetableDao.getAllRecipeCardsForAVegetable(vegetable.getId());
+      vegetableDao.addTagToRecipeCard(vegetable, recipeCard);
+      vegetableDao.addTagToRecipeCard(tomato, recipeCard);
+      vegetableDao.addTagToRecipeCard(anotherVegetable, recipeCard2);
+      vegetableDao.addTagToRecipeCard(tomato, recipeCard2);
+      List<RecipeCard>testRecipes = vegetableDao.getAllRecipeCardsForATag(vegetable.getId());
       assertEquals( recipeCard, testRecipes.get(0));
-      List<RecipeCard>test2Recipes= vegetableDao.getAllRecipeCardsForAVegetable(anotherVegetable.getId());
+      List<RecipeCard>test2Recipes= vegetableDao.getAllRecipeCardsForATag(anotherVegetable.getId());
       assertEquals( recipeCard2, test2Recipes.get(0));
-      List<RecipeCard>test3Recipes= vegetableDao.getAllRecipeCardsForAVegetable(tomato.getId());
+      List<RecipeCard>test3Recipes= vegetableDao.getAllRecipeCardsForATag(tomato.getId());
       assertEquals( 2, test3Recipes.size());
-      List<Vegetable> testVegetables = recipeCardDao.getAllVegetablesForARecipeCard(recipeCard.getId());
-      Vegetable[] vegesExpected = { vegetable, tomato };
+      List<Tag> testVegetables = recipeCardDao.getAllTagsForARecipeCard(recipeCard.getId(),"vegetables");
+      Tag[] vegesExpected = { vegetable, tomato };
       assertEquals ( Arrays.asList(vegesExpected), testVegetables);
     }
   }

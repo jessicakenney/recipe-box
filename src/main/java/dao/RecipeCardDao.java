@@ -1,7 +1,7 @@
 package dao;
 
 import models.RecipeCard;
-import models.Vegetable;
+import models.Tag;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface RecipeCardDao {
     //Read
     RecipeCard findById(int id);
     List<RecipeCard> getAll();
-    List<Vegetable> getAllVegetablesForARecipeCard(int id);
+    List<Tag> getAllTagsForARecipeCard(int id,String tableName);
 
     //Update
     void update(int id, String name, String url, String image,String notes,int rating);

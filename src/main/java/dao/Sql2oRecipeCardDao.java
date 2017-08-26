@@ -1,7 +1,7 @@
 package dao;
 
 import models.RecipeCard;
-import models.Vegetable;
+import models.Tag;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
@@ -66,6 +66,7 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
   }
 
   @Override
+  //will want to delete from all joined tables
   public void deleteById(int id) {
     String sql = "DELETE from recipecards WHERE id=:id";
     String deleteJoin = "DELETE from recipecards_vegetables WHERE recipeCardid = :recipeCardId";
@@ -82,21 +83,22 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
   }
 
   @Override
-  public List<Vegetable> getAllVegetablesForARecipeCard(int recipeCardId) {
-    ArrayList<Vegetable> vegetables = new ArrayList<>();
-    //select all vegetables id's that exist for specific Recipe in join table.
-    String joinQuery = "SELECT vegetableId FROM recipecards_vegetables WHERE recipeCardId = :recipeCardId";
+  public List<Tag> getAllTagsForARecipeCard(int recipeCardId, String tableName) {
+
+    ArrayList<Tag> vegetables = new ArrayList<>();
+    //select all vegetable-tag id's that exist for specific Recipe in join table.
+    String joinQuery = "SELECT tagId FROM recipecards_"+tableName+" WHERE recipeCardId = :recipeCardId";
     try (Connection con = sql2o.open()) {
-      List<Integer> allVegetableIds = con.createQuery(joinQuery)
+      List<Integer> allTagIds = con.createQuery(joinQuery)
               .addParameter("recipeCardId", recipeCardId)
               .executeAndFetch(Integer.class);
-      for (Integer vegetableId : allVegetableIds){
+      for (Integer vegetableId : allTagIds){
         // now grab all the vegetables using ids
-        String recipeCardQuery = "SELECT * FROM vegetables WHERE id = :vegetableId";
+        String recipeCardQuery = "SELECT * FROM "+tableName+" WHERE id = :vegetableId";
         vegetables.add(
                 con.createQuery(recipeCardQuery)
                         .addParameter("vegetableId", vegetableId)
-                        .executeAndFetchFirst(Vegetable.class));
+                        .executeAndFetchFirst(Tag.class));
       }
     } catch (Sql2oException ex){
       System.out.println(ex);

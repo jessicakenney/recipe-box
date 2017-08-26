@@ -17,6 +17,6 @@ CREATE TABLE IF NOT EXISTS vegetables (
 CREATE TABLE IF NOT EXISTS recipecards_vegetables (
  id int PRIMARY KEY auto_increment,
  recipeCardId VARCHAR,
- vegetableId VARCHAR
+ tagId VARCHAR
 );
 

@@ -51,7 +51,7 @@ import static org.junit.Assert.*;
     public void setUp() throws Exception {
       String connectionString = "jdbc:h2:mem:testing;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
       Sql2o sql2o = new Sql2o(connectionString, "", "");
-      vegetableDao = new Sql2oTagDao(sql2o);
+      vegetableDao = new Sql2oTagDao(sql2o, "vegetables");
       recipeCardDao = new Sql2oRecipeCardDao(sql2o);
       conn = sql2o.open();
     }

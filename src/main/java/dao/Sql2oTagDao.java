@@ -13,9 +13,9 @@ import java.util.List;
     private final Sql2o sql2o;
     private String tableName;
 
-    public Sql2oTagDao(Sql2o sql2o) {
+    public Sql2oTagDao(Sql2o sql2o, String tableName) {
       this.sql2o = sql2o;
-      this.tableName = "vegetables";
+      this.tableName = tableName;
     }
 
     @Override

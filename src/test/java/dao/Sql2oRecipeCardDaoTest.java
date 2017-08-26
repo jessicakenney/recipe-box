@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
 public class Sql2oRecipeCardDaoTest {
 
   private Sql2oRecipeCardDao recipeCardDao;
-  //private Sql2oFoodTypeDao foodTypeDao;
   private Connection conn;
 
   public RecipeCard getTestRecipeCard() {
@@ -35,7 +34,6 @@ public class Sql2oRecipeCardDaoTest {
     String connectionString = "jdbc:h2:mem:testing;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
     Sql2o sql2o = new Sql2o(connectionString, "", "");
     recipeCardDao = new Sql2oRecipeCardDao(sql2o);
-    //foodTypeDao = new Sql2oFoodTypeDao(sql2o);
     conn = sql2o.open();
   }
 

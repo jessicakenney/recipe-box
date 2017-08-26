@@ -21,7 +21,7 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
     public void add(RecipeCard recipeCard) {
       String sql = "INSERT INTO recipecards (name,url,image,notes,rating) VALUES (:name,:url,:image,:notes,:rating)";
       try (Connection con = sql2o.open()) { //
-        int id = (int) con.createQuery(sql) //make a new variable
+        int id = (int) con.createQuery(sql)
                 .bind(recipeCard)
                 .executeUpdate()
                 .getKey();
@@ -47,6 +47,7 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
                .executeAndFetchFirst(RecipeCard.class);
      }
    }
+
   @Override
   public void update(int id, String name, String url,String image, String notes, int rating) {
     String sql = "UPDATE recipecards SET (name,url,image,notes,rating)=(:name,:url,:image,:notes,:rating) WHERE id=:id";

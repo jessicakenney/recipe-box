@@ -24,7 +24,11 @@ Your project will be evaluated for it's completeness and thoughtfulness. Include
 
 ## Postman Verification
 
-![Alt text](src/main/resources/public/images/postman1.png)
+![Alt text](src/main/resources/public/images/recipecards.png)
+![Alt text](src/main/resources/public/images/recipecard-2.png)
+![Alt text](src/main/resources/public/images/getAllVegetablesforRecipeCard-2.png)
+![Alt text](src/main/resources/public/images/vegetables.png)
+![Alt text](src/main/resources/public/images/getAllRecipesForAVegetable.png)
 
 
 ## Setup
@@ -39,5 +43,4 @@ email with any questions: jessicakenney@yahoo.com,
 ## Technologies Used
 Java,Handlebars,Postman
 
-### Legal
-This software is licensed under MIT Copyright (c) 2017 Jessica Sheridan
+

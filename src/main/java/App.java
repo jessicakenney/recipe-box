@@ -20,6 +20,7 @@ public class App {
     //----------DataBase SetUp----------//
     Sql2oRecipeCardDao recipeCardDao;
     Sql2oTagDao vegetableDao;
+    Sql2oTagDao mealDao;
     Connection conn;
     Gson gson = new Gson();
 
@@ -28,9 +29,10 @@ public class App {
     Sql2o sql2o = new Sql2o(connectionString, "", "");
     recipeCardDao = new Sql2oRecipeCardDao(sql2o);
     vegetableDao = new Sql2oTagDao(sql2o,"vegetables");
+    mealDao = new Sql2oTagDao(sql2o,"meals");
     conn = sql2o.open();
 
-    populateRecipeBox(recipeCardDao,vegetableDao);
+    populateRecipeBox(recipeCardDao,vegetableDao,mealDao);
 
     //----------RecipeCard API EndPoints----------//
 
@@ -64,15 +66,23 @@ public class App {
       return gson.toJson(recipeCardToFind);
     });
 
-    // Add Vegetable Tag To RecipeCard -->Join
+    //----------Add Tags to Recipe Card[Join]----------//
     post("/recipecards/:recipeCardId/vegetables/:vegetableId/new", "application/json", (req,res)-> {
       int vegetableId = Integer.parseInt(req.params("vegetableId"));
       int recipeCardId = Integer.parseInt(req.params("recipeCardId"));
       Tag vegetable = vegetableDao.findById(vegetableId);
       vegetableDao.addTagToRecipeCard(vegetable,recipeCardDao.findById(recipeCardId));
       res.status(201);
-      //what to return for this?
       return gson.toJson(vegetable);
+    });
+
+    post("/recipecards/:recipeCardId/meals/:mealId/new", "application/json", (req,res)-> {
+      int mealId = Integer.parseInt(req.params("mealId"));
+      int recipeCardId = Integer.parseInt(req.params("recipeCardId"));
+      Tag meal = mealDao.findById(mealId);
+      mealDao.addTagToRecipeCard(meal,recipeCardDao.findById(recipeCardId));
+      res.status(201);
+      return gson.toJson(meal);
     });
 
 
@@ -107,6 +117,47 @@ public class App {
       return gson.toJson(vegetables);
     });
 
+
+    //----------Meal Tag API EndPoints----------//
+
+    post("/meals/new", "application/json", (req, res) -> {
+      Tag meal = gson.fromJson(req.body(), Tag.class);
+      mealDao.add(meal);
+      res.status(201);
+      return gson.toJson(meal);
+    });
+
+    // Get All Meal categories
+    get("/meals", "application/json", (req, res) -> {
+      return gson.toJson(mealDao.getAll());
+    });
+
+    // Get All Recipes for a specific Meal Tag
+    get("/recipecards/meals/:id/index", "application/json", (req, res) -> {
+      int mealId = Integer.parseInt(req.params("id"));
+      if (mealDao.findById(mealId) == null) {
+        throw new ApiException(404, String.format("No Tag with id: %d exists", mealId));
+      }
+      List<RecipeCard> recipeCards = mealDao.getAllRecipeCardsForATag(mealId);
+      return gson.toJson(recipeCards);
+    });
+
+    // Get All Meal Tags for a Recipe Card
+    get("/recipecards/:recipeCardId/meals", "application/json", (req, res) -> {
+      int recipeCardId = Integer.parseInt(req.params("recipeCardId"));
+      List<Tag> meals = recipeCardDao.getAllTagsForARecipeCard(recipeCardId, "meals");
+      return gson.toJson(meals);
+    });
+
+    // Get All Available Resources at Root
+    get("/", "application/json", (req, res) -> {
+      Map<String, String> rootIndex = new HashMap<>();
+      rootIndex.put("recipeCards","localhost:4567/recipecards");
+      rootIndex.put("vegetables","localhost:4567/vegetables");
+      rootIndex.put("meals","localhost:4567/meals");
+      return gson.toJson(rootIndex);
+    });
+
     exception(ApiException.class, (errorObjectThatWeMade, req, res) -> {
       ApiException error = (ApiException) errorObjectThatWeMade;
       Map<String, Object> jsonMap = new HashMap<>();
@@ -126,7 +177,7 @@ public class App {
   }
 
 
-  public static void populateRecipeBox( Sql2oRecipeCardDao recipeCardDao,Sql2oTagDao vegetableDao) {
+  public static void populateRecipeBox( Sql2oRecipeCardDao recipeCardDao,Sql2oTagDao vegetableDao, Sql2oTagDao mealDao) {
 
 //--------------------Recipe Cards--------------------//
     String name = "Corn Chowder";
@@ -162,12 +213,25 @@ public class App {
     vegetableDao.add(new Tag("potatoes"));//5
     vegetableDao.add(new Tag("tomatoes"));//6
 
-  //--------------------Join (many-2-many--------------------//
+    //--------------------Meal Tags --------------------//
+    mealDao.add(new Tag("sweets"));    //1
+    mealDao.add(new Tag("side"));    //2
+    mealDao.add(new Tag("breakfast"));//3
+    mealDao.add(new Tag("main"));//4
+    mealDao.add(new Tag("brunch"));//5
+    mealDao.add(new Tag("salad"));    //6
+
+  //--------------------Join (many-2-many)--------------------//
     vegetableDao.addTagToRecipeCard(vegetableDao.findById(2),recipeCardDao.findById(1));
     vegetableDao.addTagToRecipeCard(vegetableDao.findById(5),recipeCardDao.findById(1));
     vegetableDao.addTagToRecipeCard(vegetableDao.findById(1),recipeCardDao.findById(2));
     vegetableDao.addTagToRecipeCard(vegetableDao.findById(3),recipeCardDao.findById(3));
     vegetableDao.addTagToRecipeCard(vegetableDao.findById(1),recipeCardDao.findById(3));
+
+    mealDao.addTagToRecipeCard(mealDao.findById(4),recipeCardDao.findById(1));
+    mealDao.addTagToRecipeCard(mealDao.findById(4),recipeCardDao.findById(2));
+    mealDao.addTagToRecipeCard(mealDao.findById(6),recipeCardDao.findById(3));
+    mealDao.addTagToRecipeCard(mealDao.findById(1),recipeCardDao.findById(4));
   }
 
 }

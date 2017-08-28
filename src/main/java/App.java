@@ -189,7 +189,10 @@ public class App {
 
     name = "Greens and Cheese Quesadillas";
     url = "https://food52.com/recipes/72397-greens-stuffed-cheese-stuffed-quesadilla";
-    recipeCardDao.add(new RecipeCard(name, url));
+    image="NA";
+    notes="judes favorite";
+    rating = 4;
+    recipeCardDao.add(new RecipeCard(name, url,image,notes,rating));
 
     name = "Toro Bravo's Radicchio Salad";
     url = "https://food52.com/recipes/25448-toro-bravo-s-radicchio-salad-with-manchego-vinaigrette";

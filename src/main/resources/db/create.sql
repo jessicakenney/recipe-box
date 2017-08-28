@@ -6,7 +6,12 @@ CREATE TABLE IF NOT EXISTS recipecards (
  url VARCHAR,
  image VARCHAR,
  notes VARCHAR,
- rating INT
+ rating INT,
+ ingredients VARCHAR,
+ directions VARCHAR,
+ yield VARCHAR,
+ totalTime VARCHAR,
+ textimage VARCHAR
 );
 
 CREATE TABLE IF NOT EXISTS vegetables (

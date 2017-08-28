@@ -23,6 +23,7 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
       try (Connection con = sql2o.open()) { //
         int id = (int) con.createQuery(sql)
                 .bind(recipeCard)
+                .throwOnMappingFailure(false)
                 .executeUpdate()
                 .getKey();
         recipeCard.setId(id);
@@ -35,6 +36,7 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
    public List<RecipeCard> getAll(){
      try(Connection con = sql2o.open()){
        return con.createQuery("SELECT * FROM recipecards")
+               .throwOnMappingFailure(false)
                .executeAndFetch(RecipeCard.class);
      }
    }
@@ -44,6 +46,7 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
      try (Connection con = sql2o.open()) {
        return con.createQuery("SELECT * FROM recipecards WHERE id = :id")
                .addParameter("id", id)
+               .throwOnMappingFailure(false)
                .executeAndFetchFirst(RecipeCard.class);
      }
    }
@@ -69,12 +72,16 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
   //will want to delete from all joined tables
   public void deleteById(int id) {
     String sql = "DELETE from recipecards WHERE id=:id";
-    String deleteJoin = "DELETE from recipecards_vegetables WHERE recipeCardid = :recipeCardId";
+    String deleteJoinVege = "DELETE from recipecards_vegetables WHERE recipeCardid = :recipeCardId";
+    String deleteJoinMeal = "DELETE from recipecards_meals WHERE recipeCardid = :recipeCardId";
     try (Connection con = sql2o.open()) {
       con.createQuery(sql)
               .addParameter("id", id)
               .executeUpdate();
-      con.createQuery(deleteJoin)
+      con.createQuery(deleteJoinVege)
+              .addParameter("recipeCardId",id)
+              .executeUpdate();
+      con.createQuery(deleteJoinMeal)
               .addParameter("recipeCardId",id)
               .executeUpdate();
     } catch (Sql2oException ex) {
@@ -85,25 +92,25 @@ public class Sql2oRecipeCardDao implements RecipeCardDao {
   @Override
   public List<Tag> getAllTagsForARecipeCard(int recipeCardId, String tableName) {
 
-    ArrayList<Tag> vegetables = new ArrayList<>();
-    //select all vegetable-tag id's that exist for specific Recipe in join table.
+    ArrayList<Tag> tags = new ArrayList<>();
+    //select all tag id's that exist for specific Recipe in join table.
     String joinQuery = "SELECT tagId FROM recipecards_"+tableName+" WHERE recipeCardId = :recipeCardId";
     try (Connection con = sql2o.open()) {
       List<Integer> allTagIds = con.createQuery(joinQuery)
               .addParameter("recipeCardId", recipeCardId)
               .executeAndFetch(Integer.class);
-      for (Integer vegetableId : allTagIds){
-        // now grab all the vegetables using ids
-        String recipeCardQuery = "SELECT * FROM "+tableName+" WHERE id = :vegetableId";
-        vegetables.add(
+      for (Integer tagId : allTagIds){
+        // now grab all the tags using ids
+        String recipeCardQuery = "SELECT * FROM "+tableName+" WHERE id = :tagId";
+        tags.add(
                 con.createQuery(recipeCardQuery)
-                        .addParameter("vegetableId", vegetableId)
+                        .addParameter("tagId", tagId)
                         .executeAndFetchFirst(Tag.class));
       }
     } catch (Sql2oException ex){
       System.out.println(ex);
     }
-    return vegetables;
+    return tags;
   }
 
 

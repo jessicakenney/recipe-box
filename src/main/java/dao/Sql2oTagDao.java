@@ -75,6 +75,7 @@ import java.util.List;
       try (Connection con = sql2o.open()) {
         List<Integer> allRecipeCardIds = con.createQuery(joinQuery)
                 .addParameter("tagId", tagId)
+                .throwOnMappingFailure(false)
                 .executeAndFetch(Integer.class); //getting recipe Ids
         for (Integer recipeCardId : allRecipeCardIds){
           // now grab all the recipeCards using ids
@@ -82,6 +83,7 @@ import java.util.List;
           recipeCards.add(
                   con.createQuery(recipeCardQuery)
                           .addParameter("recipeCardId", recipeCardId)
+                          .throwOnMappingFailure(false)
                           .executeAndFetchFirst(RecipeCard.class));
         }
       } catch (Sql2oException ex){

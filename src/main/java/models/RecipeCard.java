@@ -9,15 +9,6 @@ public class RecipeCard {
   private int rating;
   private int id;
 
-  //minimum parameters required to start recipeCard
-  public RecipeCard (String name,String url){
-      this.name = name;
-      this.url = url;
-      this.image = "NA";
-      this.notes = "NA";
-      this.rating = 0;
-  }
-
   public RecipeCard (String name,String url, String image,String notes,int rating){
     this.name = name;
     this.url = url;

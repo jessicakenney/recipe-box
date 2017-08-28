@@ -9,15 +9,15 @@
 - [Description](#description)
 - [Test Plan](#test-plan)
     - [httpie](#httpie)
-- [API Documentation](#api documentation)
+- [API Documentation](#api-documentation)
     - [Root](#root)
-    - [Recipe Cards](#recipe cards)
+    - [Recipe Cards](#recipe-cards)
     - [Vegetable](#vegetable)
     - [Meal](#meal)
 - [Setup](#setup)
 - [Support](#support)
-- [License](#license)
-- [Links](#links)
+- [Known Issues](#known-issues/bugs)
+- [Technologies Used](#technologies-used)
 
 
 ## Description
@@ -31,8 +31,8 @@ to find just the right recipe in a pinch. Current tag categories include Vegetab
 
 ## Test Plan 
 
-####Complete Dao Coverage
-####Verification: Run: Sql2oRecipeCardDaoTest, and Sql2oTagDaoTest
+#### Complete Dao Coverage
+#### Verification: Run: Sql2oRecipeCardDaoTest, Sql2oUserRecipeCardDaoTest and Sql2oTagDaoTest
 
 | Behavior      | Input | Output |
 | ------------- | ------------- | ------------- |
@@ -55,18 +55,18 @@ This documentation will introduce the API endpoints that you can use HTTP reques
 post data).
 
 ### Root
-####The Root url provides information on all available resources within the API currently:
+#### The Root url provides information on all available resources within the API currently:
 
 ![Alt text](src/main/resources/public/images/httpie-root.png)
 
 ### Recipe Cards
 #### Endpoints:
-	#####[create]
+##### [create]
 	*localhost:4567/recipecards/new 					--Add new recipeCard
 	*localhost:4567/recipecards/:recipeCardId/vegetables/:vegetableId/new	--Add specific vegetable tag to recipeCard
 	*localhost:4567/recipecards/:recipeCardId/meals/:mealId/new		--Add specific meal tag to recipeCard
 
-	#####[retrieve]
+##### [retrieve]
 	*localhost:4567/recipecards				-- get all recipeCard resources
 	*localhost:4567/recipecards/:id				--specific recipeCard resource
 	*localhost:4567/recipecards/:recipeCardId/vegetables	-- get All vegetable tags for a recipeCard
@@ -79,13 +79,20 @@ post data).
 ![Alt text](src/main/resources/public/images/getAllRecipesForAVegetable-5.png)
 
 #### Attributes:
-	| Attribute | datatype | desc    |
-	| name      | String | Name of recipe |
-	| url      | String | location of recipe on the internet|
-	| image      | String | location of an image of the recipe|
-	| notes      | String | personal spot to add a note about the recipe| 
-	| rating      | int | how much did you like it | 
-	| id      | int | recipe number | 
+| Attribute | datatype | desc    |
+| name      | String | Name of recipe |
+| url      | String | location of recipe on the internet|
+| image      | String | location of an image of the recipe|
+| notes      | String | personal spot to add a note about the recipe| 
+| rating      | int | how much did you like it | 
+| id      | int | recipe number | 
+| ingredients| String| user Recipe Card ingredients |
+| directions| String| user Recipe Card directions|
+| yield| String| user Recipe Card servings|
+| totalTime| String| user Recipe Card total Time to prepare|
+| textImage| String| user Recipe Card image of original text|
+
+	* Need to update ingredients and directions to be a List<String>
 
 
 ### Vegetable 
@@ -97,9 +104,9 @@ post data).
 ![Alt text](src/main/resources/public/images/vegetables.png)
 
 #### Attributes:
-	| Attribute | datatype | desc    |
-	| name      | String | Name of tag |
-	| id      | int | tag id|
+| Attribute | datatype | desc    |
+| name      | String | Name of tag |
+| id      | int | tag id|
 
 
 ### Meal 
@@ -108,14 +115,14 @@ post data).
 	*localhost:4567/meals/new	--create new meal tag
 ####  Example:
 ####  Attributes:
-	| Attribute | datatype | desc    |
-	| name      | String | Name of tag |
-	| id      | int | tag id|
+| Attribute | datatype | desc    |
+| name      | String | Name of tag |
+| id      | int | tag id|
 
 
 ## Setup
-git clone https://github.com/jessicakenney/recipe-box.git
-bring up url: localhost:4567
+#### git clone https://github.com/jessicakenney/recipe-box.git
+#### bring up url: localhost:4567 and refer to API documentation in this README.
 
 
 ## Support 
@@ -124,6 +131,6 @@ email with any questions: jessicakenney@yahoo.com,
 ## Known Issues/Bugs
 
 ## Technologies Used
-Java,Handlebars,Postman
+Java,Spark,Postman
 
 

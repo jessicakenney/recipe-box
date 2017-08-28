@@ -43,7 +43,10 @@ import static org.junit.Assert.*;
     public RecipeCard getTestRecipeCard2() {
       String name = "Greens and Cheese Quesadillas";
       String url = "https://food52.com/recipes/72397-greens-stuffed-cheese-stuffed-quesadilla";
-      return new RecipeCard(name, url);
+      String image="NA";
+      String notes="judes favorite";
+      int rating = 4;
+      return new RecipeCard(name, url,image,notes,rating);
     }
 
 

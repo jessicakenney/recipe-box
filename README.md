@@ -41,11 +41,9 @@ to find just the right recipe in a pinch. Current tag categories include Vegetab
 | getAll_allRecipeCardsAreFound | recipeCard1,recipeCard2 | 2|
 | update_correctlyUpdates | recipeCard.getName | newName|
 | deleteById | recipeCard | 0|
-| ------------- | ------------- | ------------- |
 | addTagtoRecipeCard | |  |
 | getAllRecipeCardsForATag | |  |
 | getAllTagsForARecipeCard | |  |
-| ------------- | ------------- | ------------- |
 
 ### httpie 
 ![Alt text](src/main/resources/public/images/httpie.png)
@@ -80,6 +78,7 @@ post data).
 
 #### Attributes:
 | Attribute | datatype | desc    |
+| ------------- | ------------- | ------------- |
 | name      | String | Name of recipe |
 | url      | String | location of recipe on the internet|
 | image      | String | location of an image of the recipe|
@@ -92,7 +91,6 @@ post data).
 | totalTime| String| user Recipe Card total Time to prepare|
 | textImage| String| user Recipe Card image of original text|
 
-	* Need to update ingredients and directions to be a List<String>
 
 
 ### Vegetable 
@@ -105,6 +103,7 @@ post data).
 
 #### Attributes:
 | Attribute | datatype | desc    |
+| ------------- | ------------- | ------------- |
 | name      | String | Name of tag |
 | id      | int | tag id|
 
@@ -116,6 +115,7 @@ post data).
 ####  Example:
 ####  Attributes:
 | Attribute | datatype | desc    |
+| ------------- | ------------- | ------------- |
 | name      | String | Name of tag |
 | id      | int | tag id|
 
@@ -129,6 +129,7 @@ post data).
 email with any questions: jessicakenney@yahoo.com,
 
 ## Known Issues/Bugs
+	* Need to update ingredients and directions to be a List<String>
 
 ## Technologies Used
 Java,Spark,Postman

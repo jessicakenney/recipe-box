@@ -1,0 +1,32 @@
+
+POST localhost:4567/recipecards/new
+{
+"name": "Great online Recipe",
+"url": "https://food52.com/recipes/72747-black-bean-with-mango-and-chile-powder-salad",
+"image": "na",
+"notes": "fuel for Javascript",
+"rating": "5"
+}
+
+{
+"name": "User Input Recipe",
+"notes": "yum",
+"rating": "2",
+"ingredients" : "2 pieces of bread,cheese,fresh tomato",
+"directions" : "toast and melt, S&P",
+"yield": "just enough",
+"totalTime": "2 minutes",
+"textImage": "na"
+}
+
+
+localhost:4567/vegetables/new
+{
+"name" : "summer squash"
+}
+
+
+localhost:4567/meals/new
+{
+"name" : "budget"
+}
